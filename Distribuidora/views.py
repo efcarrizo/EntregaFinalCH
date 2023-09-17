@@ -16,4 +16,33 @@ def lista_clientes(req):
     lista = Cliente.objects.all()
     
     return render(req, 'lista_clientes.html', {'lista_clientes': lista})
+
+
+#########################################################################################
+
+#Inicio
+
+def inicio(req):
+    
+    return render(req, 'inicio.html')
+
+#clientes
+
+def clientes(req):
+    
+    return render(req, 'clientes.html')
+
+#Productos
+
+def productos(req):
+    
+    return render(req, 'productos.html')
+
+#Ventas
+
+def ventas(req):
+    
+    return render(req, 'ventas.html')
+
+#########################################################################################
     
