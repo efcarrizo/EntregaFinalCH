@@ -7,7 +7,7 @@ class Cliente(models.Model):
     email = models.EmailField()
     
     def __str__(self):
-        return self.nombre
+        return f'{self.apellido} {self.nombre}'
     
 class Producto(models.Model):
     
@@ -15,6 +15,7 @@ class Producto(models.Model):
     codigo = models.IntegerField()
     categoria = models.CharField(max_length=50) 
     precio = models.DecimalField(max_digits=10, decimal_places=2)
+    stock = models.IntegerField()
     
     def __str__(self):
         return self.nombre
@@ -26,5 +27,5 @@ class Venta(models.Model):
     fecha_venta = models.DateTimeField(auto_now_add=True)
     confirmada = models.BooleanField(default=False)
         
-    def __str__(self):
-        return 'Productos'
+
+    

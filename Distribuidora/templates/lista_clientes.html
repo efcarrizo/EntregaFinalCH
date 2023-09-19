@@ -1,15 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista Clientes</title>
-</head>
-<body>
+{% extends 'inicio.html' %}
 
-    {% for cliente in lista_clientes %}
-        <ul>{{cliente.nombre}} {{cliente.apellido}} {{cliente.email}} </ul>
-    {% endfor %}
+{% block HerenciaDeContenido %}
+
+{% for cliente in lista_clientes %}
+
+<ul>{{cliente.nombre}} {{cliente.apellido}} {{cliente.email}} </ul>
+{% endfor %}
     
-</body>
-</html>
+{% endblock HerenciaDeContenido %}
