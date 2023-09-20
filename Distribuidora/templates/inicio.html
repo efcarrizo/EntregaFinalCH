@@ -19,7 +19,7 @@
     </head>
     <body>
         <!-- Navigation-->
-        <nav class="navbar navbar-light bg-light static-top">
+        <nav class="navbar navbar-dark bg-dark">
             <div class="container">
                 <a class="navbar-brand" href="{% url 'Inicio' %}">Inicio</a>
                 <a class="navbar-brand" href="{% url 'Productos' %}">Productos</a>
@@ -52,6 +52,7 @@
         
 {% block HerenciaDeContenido %}
     <h1>Inicio</h1>
+    {{mensaje}}
 {% endblock HerenciaDeContenido %}
             
         <!-- Footer-->

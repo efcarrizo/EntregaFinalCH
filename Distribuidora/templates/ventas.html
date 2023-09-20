@@ -2,5 +2,12 @@
 
 
 {% block HerenciaDeContenido %}
-<h1>Ventas</h1>
+<ul>
+    <!-- e recorre la lista ventas e imprime cada una -->
+    {% for e in ventas  %} 
+        <li>
+            {{e}}
+        </li>
+    {% endfor %}    
+</ul>
 {% endblock HerenciaDeContenido %}

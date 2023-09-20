@@ -26,6 +26,9 @@ class Venta(models.Model):
     cantidad = models.PositiveIntegerField()
     fecha_venta = models.DateTimeField(auto_now_add=True)
     confirmada = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return f'Producto: {self.producto} Cliente: {self.cliente} Cantidad: {self.cantidad}'
         
 
     
