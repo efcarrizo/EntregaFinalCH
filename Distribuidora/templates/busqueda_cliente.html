@@ -1,0 +1,13 @@
+{% extends 'inicio.html' %}
+
+
+{% block HerenciaDeContenido %}
+
+    <form action="{% url 'ClienteBuscar' %}" method="get">
+
+        <p>Apellido del cliente<input type="text" name="apellido"></p>
+        <button type="submit">Buscar</button>
+
+    </form>
+    
+{% endblock HerenciaDeContenido %}

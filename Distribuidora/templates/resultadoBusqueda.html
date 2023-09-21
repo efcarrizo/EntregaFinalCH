@@ -1,0 +1,19 @@
+{% extends 'inicio.html' %}
+
+{% block HerenciaDeContenido %}
+
+<h1>Resultado de búsqueda de producto</h1>
+<!-- Si el producto es encontrado
+    devuelve el nombre y el stock,
+    de lo contrario el mensaje del contexto -->
+{% if producto %}
+    <h2>Producto encontrado:</h2>
+    <p>Nombre: {{ producto.nombre }}</p>
+    <p>Stock: {{ producto.stock }}</p>
+    <button><a href="{% url 'ProductoBusqueda' %}">Volver a la busqueda</a></button>
+{% else %}
+    <p>{{ mensaje }}</p>
+    <button><a href="{% url 'ProductoBusqueda' %}">Volver a la busqueda</a></button>
+{% endif %}
+
+{% endblock HerenciaDeContenido %}

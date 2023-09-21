@@ -1,0 +1,21 @@
+{% extends 'inicio.html' %}
+
+
+{% block HerenciaDeContenido %}
+
+    <form action="{% url 'ProductosFormulario' %}" method="post">{% csrf_token %}
+
+        {{miFormulario.as_p}}
+
+        {{mensaje}}
+
+        <table class="default">
+            <tr>
+              <th><button type="submit">Enviar</button></th>
+          
+              <th><button type="submit"><a href="{% url 'ProductoBusqueda' %}">Buscar un producto</a></button></th>
+            </tr>
+        </table>
+    </form>
+    
+{% endblock HerenciaDeContenido %}

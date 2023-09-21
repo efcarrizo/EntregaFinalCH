@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Landing Page - Start Bootstrap Theme</title>
+        <title>Grow street</title>
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
         <!-- Bootstrap icons-->
@@ -22,9 +22,27 @@
         <nav class="navbar navbar-dark bg-dark">
             <div class="container">
                 <a class="navbar-brand" href="{% url 'Inicio' %}">Inicio</a>
-                <a class="navbar-brand" href="{% url 'Productos' %}">Productos</a>
-                <a class="navbar-brand" href="{% url 'Clientes' %}">Clientes</a>
                 <a class="navbar-brand" href="{% url 'Ventas' %}">Ventas</a>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Productos
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="{% url 'Productos' %}">Producto</a></li>
+                      <li><a class="dropdown-item" href="{% url 'ProductosFormulario' %}">Ingresar Producto</a></li>
+                      <li><a class="dropdown-item" href="{% url 'ProductoBusqueda' %}">Buscar Producto</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Clientes
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="{% url 'Clientes' %}">Clientes</a></li>
+                      <li><a class="dropdown-item" href="{% url 'ClientesFormulario' %}">Ingresar cliente</a></li>
+                      <li><a class="dropdown-item" href="{% url 'ClienteBusqueda' %}">Buscar Cliente</a></li>
+                    </ul>
+                </div>
                 <a class="btn btn-primary" href="#signup">Sign Up</a>
             </div>
         </nav>
@@ -33,17 +51,9 @@
             <div class="container position-relative">
                 <div class="row justify-content-center">
                     <div class="col-xl-6">
-                        <div class="text-center text-white">
+                        <div class="text-center text-black">
                             <!-- Page heading-->
                             <h1 class="mb-5">Bienvenidos a Grow Street</h1>
-                            <!-- Signup form-->
-                            <!-- * * * * * * * * * * * * * * *-->
-                            <!-- * * SB Forms Contact Form * *-->
-                            <!-- * * * * * * * * * * * * * * *-->
-                            <!-- This form is pre-integrated with SB Forms.-->
-                            <!-- To make this form functional, sign up at-->
-                            <!-- https://startbootstrap.com/solution/contact-forms-->
-                            <!-- to get an API token!-->
                         </div>
                     </div>
                 </div>
