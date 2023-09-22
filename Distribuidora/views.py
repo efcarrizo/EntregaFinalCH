@@ -55,6 +55,7 @@ def ventas(req):
 
 #Forms method post
 
+#Cargar un cliente
 def clientesformularios(req):
     if req.method == 'POST':
         miFormulario = ClienteFormulario(req.POST)
@@ -81,7 +82,8 @@ def clientesformularios(req):
     else:
         miFormulario = ClienteFormulario()
         return render(req, "clientes_formulario.html", {"miFormulario": miFormulario}) #Se le pasa el contexto miFormulario para mostrar en clientes_formulario.html
-    
+
+#Cargar un Producto    
 def productosformulario(req):
     if req.method == 'POST':
         miFormulario = ProductoFormulario(req.POST)
@@ -128,9 +130,9 @@ def producto_buscar(req):
         nombre_producto = req.GET["producto"]
         try:
             producto = Producto.objects.get(nombre=nombre_producto)
-            return render(req, 'resultadoBusqueda.html', {"producto": producto})
+            return render(req, 'resultado_busqueda_producto.html', {"producto": producto})
         except Producto.DoesNotExist:
-            return render(req, 'resultadoBusqueda.html', {"mensaje": "No se encuentra el producto"})
+            return render(req, 'resultado_busqueda_producto.html', {"mensaje": "No se encuentra el producto"})
         
 
 #Busqueda de clientes
@@ -141,14 +143,15 @@ def clientebusqueda(req):
 
 def cliente_buscar(req):
     
-   if "apellido" in req.GET: #Si se envia un producto verifica que el producto exista
+   if "apellido" in req.GET: #Si se envia un apellido verifica que el apellido exista
         apellido_cliente = req.GET["apellido"]
         try:
-            cliente = Cliente.objects.get(apellido=apellido_cliente)
-            return render(req, 'resultadoBusqueda2.html', {"cliente": cliente})
+            clientes = Cliente.objects.filter(apellido__icontains=apellido_cliente)
+            resultado = render(req, 'resultado_busqueda_cliente.html', {"clientes": clientes})
         except Cliente.DoesNotExist:
-            return render(req, 'resultadoBusqueda2.html', {"mensaje": "No se encuentra el producto"})
+            resultado = render(req, 'resultado_busqueda_cliente.html', {"mensaje": "No se encuentra el Cliente"})
 
+        return resultado
 
         
         
