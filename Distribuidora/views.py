@@ -2,6 +2,9 @@ from django.shortcuts import render
 from .models import *
 from django.http import HttpResponse
 from .forms import *
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import DeleteView, UpdateView, CreateView
 
 def cliente(req, nombre, apellido, email):
     
@@ -55,7 +58,7 @@ def ventas(req):
 
 #Forms method post
 
-#Cargar un cliente
+#Crear un cliente
 def clientesformularios(req):
     if req.method == 'POST':
         miFormulario = ClienteFormulario(req.POST)
@@ -139,7 +142,7 @@ def producto_buscar(req):
 
 def clientebusqueda(req):
     
-    return render(req, "busqueda_cliente.html", {"mensaje" : "hola soy un contexto"})
+    return render(req, "busqueda_cliente.html", {"mensaje" : "En esta seccion puedes buscar un cliente"})
 
 def cliente_buscar(req):
     
@@ -155,34 +158,86 @@ def cliente_buscar(req):
 
         
         
+#########################################################################################
+
+#CRUD
+
+#Leer clientes
+
+def leer_clientes(req):
+    clientes = Cliente.objects.all()
+    
+    return render(req, "leer_clientes.html", {"clientes":clientes})
+
+#Eliminar clientes
+
+def eliminar_clientes(req, id):
+    
+    if req.method == 'POST':
         
+        cliente = Cliente.objects.get(id=id)
+        cliente.delete()
         
+        clientes = Cliente.objects.all()
+        return render(req, "leer_clientes.html", {"clientes":clientes})
+    
+#Editar clientes
+
+def editar_clientes(req, id):
+    
+    cliente = Cliente.objects.get(id=id)
+    
+    
+    if req.method == 'POST':
+        miFormulario = ClienteFormulario(req.POST)
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+        if miFormulario.is_valid():
+            data = miFormulario.cleaned_data
+            cliente.nombre = data["nombre"]
+            cliente.apellido = data["apellido"]
+            cliente.email = data["email"]
+            cliente.save()
+            
+            return render(req, "inicio.html", {"mensaje": "Cliente modificado"})
+        else:
+            return render(req, "inicio.html", {"mensaje": "Formulario inválido"})
+
+    else:
+        miFormulario = ClienteFormulario(initial={
+            "nombre": cliente.nombre,
+            "apellido": cliente.apellido,
+            "email": cliente.email      
+        })
+        return render(req, "editar_cliente.html", {"miFormulario": miFormulario, "id": cliente.id}) #Muestra el formulario con el cliente
+    
+    
+#CRUD con clases
+
+class ClienteList(ListView):
+    model = Cliente
+    template_name = "clientelist.html"
+    context_object_name = "clientes"
+    
+class ClienteDetail(DetailView):
+    model = Cliente
+    template_name = "clientedetail.html"
+    context_object_name = "cliente"
+    
+class ClienteCreate(CreateView):
+    model = Cliente
+    template_name = "clientecreate.html"
+    fields = ["nombre", "apellido", "email"]
+    success_url = "/distribuidora/"
+
+class ClienteUpdate(UpdateView):
+    model = Cliente
+    template_name = "clienteupdate.html"
+    fields = ["__all__"]
+    success_url = "/distribuidora/"
+
+class ClienteDelete(DeleteView):
+    model = Cliente
+    template_name = "clientedelete.html"
+    success_url = "/distribuidora/"
+
+

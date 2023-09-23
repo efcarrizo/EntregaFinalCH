@@ -1,0 +1,14 @@
+{% extends 'inicio.html' %}
+
+
+{% block HerenciaDeContenido %}
+
+    <form method="post">{% csrf_token %}
+
+        <p>Esta seguro que desea eliminar el cliente?</p>
+
+        <button type="submit">Confirmar</button>
+        <button><a href="{% url 'Inicio' %}">Cancelar</a></button>
+    </form>
+    
+{% endblock HerenciaDeContenido %}

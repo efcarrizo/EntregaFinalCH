@@ -1,0 +1,13 @@
+{% extends 'inicio.html' %}
+
+
+{% block HerenciaDeContenido %}
+
+    <form action="{% url 'ActualizaCliente' %}" method="post">{% csrf_token %}
+
+        {{form.as_p}}
+
+        <button type="submit">Enviar</button>
+    </form>
+    
+{% endblock HerenciaDeContenido %}

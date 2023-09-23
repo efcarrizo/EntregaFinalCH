@@ -10,11 +10,11 @@
             {{cliente}}
         </li>
         <div>
-            <form action="{% url 'EliminarCliente' cliente.id %}" method="post">{% csrf_token %}
-                <button type="submit">Eliminar</button>
-            </form>
             <button>
-                <a href="{% url 'EditarCliente' cliente.id %}">Editar Cliente</a>
+                <a href="{% url 'EliminaCliente' cliente.id %}">Eliminar</a>
+            </button>
+            <button>
+                <a href="{% url 'ActualizaCliente' cliente.id %}">Editar Cliente</a>
             </button>
         </div>
     {% endfor %}

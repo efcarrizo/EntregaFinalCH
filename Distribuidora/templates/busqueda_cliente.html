@@ -2,6 +2,7 @@
 
 
 {% block HerenciaDeContenido %}
+    <p>{{mensaje}}</p>
 
     <form action="{% url 'ClienteBuscar' %}" method="get">
 
@@ -9,5 +10,5 @@
         <button type="submit">Buscar</button>
 
     </form>
-    {{mensaje}}    
+
 {% endblock HerenciaDeContenido %}
