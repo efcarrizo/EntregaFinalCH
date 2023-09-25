@@ -42,5 +42,9 @@ urlpatterns = [
     path('upgrade-cliente/<pk>', ClienteUpdate.as_view(), name="ActualizaCliente"),
     path('delete-cliente/<pk>', ClienteDelete.as_view(), name="EliminaCliente"),
 
+    #LOGIN
+    path('login/', userlogin, name="Login"),
     
+    #Register user
+    path('register/', usercreate, name="UserCreate"),
 ]

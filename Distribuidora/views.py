@@ -5,6 +5,8 @@ from .forms import *
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView, UpdateView, CreateView
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth  import login, logout, authenticate
 
 def cliente(req, nombre, apellido, email):
     
@@ -46,44 +48,40 @@ def productos(req):
 
 def ventas(req):
     
-
-    cliente_id = 1
     
-    cliente = Cliente.objects.get(id = cliente_id) #Entra a la tabla y trae el cliente de la ID que solicita
-    ventas = Venta.objects.filter(cliente = cliente) #Entra a la tabla de ventas y trae al Cliente
-    
-    return render(req, 'ventas.html', {"ventas": ventas})
+    return render(req, 'ventas.html', {"mensaje": "ventas"})
 
 #########################################################################################
 
 #Forms method post
 
 #Crear un cliente
-def clientesformularios(req):
-    if req.method == 'POST':
-        miFormulario = ClienteFormulario(req.POST)
+def clientesformularios(req): 
+    if req.method == 'POST': #Si el metodo que se envia es de tipo post entra en este condicional
         
-        if miFormulario.is_valid():
-            data = miFormulario.cleaned_data
-            nombre = data["nombre"]
+        miFormulario = ClienteFormulario(req.POST) #Se obtiene en una variable ese formulario
+        
+        if miFormulario.is_valid(): #Si estan todos los campos llenos entra en este condicional
+            
+            data = miFormulario.cleaned_data  #Recupera todos los datos del formulario en la variable data
+            
+            nombre = data["nombre"] #Se le asignan valores a cada dato recuperado del formulario
             apellido = data["apellido"]
             email = data["email"]
             
-            # Verificar si ya existe un cliente en la base de datos con el mismo email
-            existing_cliente = Cliente.objects.filter(email=email).first()
+            existing_cliente = Cliente.objects.filter(email=email).first() # Verificar si ya existe un cliente en la base de datos con el mismo email
             
-            if existing_cliente:
+            if existing_cliente: #Si el email del cliente existe entra en este condicional
                 return render(req, "inicio.html", {"mensaje": "Ya existe un cliente con este correo electrónico"})
             else:
-                # Si no existe un cliente con el mismo email, crea uno nuevo
-                cliente = Cliente(nombre=nombre, apellido=apellido, email=email)
+                cliente = Cliente(nombre=nombre, apellido=apellido, email=email) # Si no existe un cliente con el mismo email, crea uno nuevo
                 cliente.save()
                 return render(req, "inicio.html", {"mensaje": "Cliente creado con éxito"})
         else:
             return render(req, "inicio.html", {"mensaje": "Formulario inválido"})
 
     else:
-        miFormulario = ClienteFormulario()
+        miFormulario = ClienteFormulario() #Si no entra por metodo post Muestra el formulario vacio
         return render(req, "clientes_formulario.html", {"miFormulario": miFormulario}) #Se le pasa el contexto miFormulario para mostrar en clientes_formulario.html
 
 #Cargar un Producto    
@@ -185,10 +183,10 @@ def eliminar_clientes(req, id):
 
 def editar_clientes(req, id):
     
-    cliente = Cliente.objects.get(id=id)
+    cliente = Cliente.objects.get(id=id) #cliente obtiene la id del Modelo cliente
     
     
-    if req.method == 'POST':
+    if req.method == 'POST': #Si el formulario viene en metodo post
         miFormulario = ClienteFormulario(req.POST)
         
         if miFormulario.is_valid():
@@ -225,6 +223,7 @@ class ClienteDetail(DetailView):
     
 class ClienteCreate(CreateView):
     model = Cliente
+    context_object_name = "CreacionDOCURSINHO"
     template_name = "clientecreate.html"
     fields = ["nombre", "apellido", "email"]
     success_url = "/distribuidora/"
@@ -241,3 +240,59 @@ class ClienteDelete(DeleteView):
     success_url = "/distribuidora/"
 
 
+#########################################################################################
+
+#Login
+
+def userlogin(req):
+    resultado = None
+    if req.method == 'POST': #Si el metodo en el que viene la request es post
+        
+        miFormulario = AuthenticationForm(req, data=req.POST) #El formulario es un form de autenticacion que recbe en la keyword data lo que viene en el formulario
+        
+        if miFormulario.is_valid(): #Si el formulario es valido entrmaos en este condicional
+            
+            data = miFormulario.cleaned_data #Data obtiene todos los datos de mi formulario
+            usuario = data["username"] 
+            pw = data["password"]
+            
+            user = authenticate(username=usuario, password=pw) #user obtiene el metodo authenticate que pide como dos parametros username que es el usuario que tenemos de la data y password que es el pw que tenemos de la data
+            
+            if user: #Si el usuario existe entra en este condicional
+                login(req, user) #Se llama al metodo login y se le pasa el user
+                resultado = render(req, "inicio.html", {"mensaje": f"Bienvenido {user}"})
+            else: #Si el usuario no existe entra en este 
+                resultado = render(req, "inicio.html", {"mensaje": "Datos incorrectos"})
+        else:
+            resultado = render(req, "inicio.html", {"mensaje":"Formulario invalido"})
+    else:
+        miFormulario = AuthenticationForm() #Si entra con un metodo get miFormulario obtiene el formulario de registro de usuario
+        resultado = render(req, 'login.html', {"miFormulario": miFormulario}) #Renderiza la pagina de inicio con el contexto del formulario para mostrar
+    
+    return resultado
+        
+#Crear usuario
+
+def usercreate(req):
+    resultado = None
+    if req.method == 'POST': #Si el metodo en el que viene la request es post
+        
+        miFormulario = UserCreationForm(req.POST) 
+        
+        if miFormulario.is_valid(): #Si el formulario es valido entramos en este condicional
+            
+            data = miFormulario.cleaned_data #Data obtiene todos los datos de mi formulario
+            
+            username = data["username"]
+            
+            miFormulario.save() #El mismo formulario tiene el metodo save, y lo hace automatico.
+            
+            resultado = render(req, "inicio.html", {"mensaje": f"Usuario {username} creado con exito!"})
+        else:
+            resultado = render(req, "inicio.html", {"mensaje":"Formulario invalido"})
+                 
+    else:
+        miFormulario = UserCreationForm() #Si entra con un metodo get miFormulario obtiene el formulario de creacion de usuario vacio
+        resultado = render(req, "register.html", {"miFormulario": miFormulario}) #Renderiza la pagina de inicio con el contexto del formulario para mostrar
+    
+    return resultado
