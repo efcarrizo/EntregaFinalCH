@@ -7,6 +7,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView, UpdateView, CreateView
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth  import login, logout, authenticate
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 def cliente(req, nombre, apellido, email):
     
@@ -211,7 +212,7 @@ def editar_clientes(req, id):
     
 #CRUD con clases
 
-class ClienteList(ListView):
+class ClienteList(LoginRequiredMixin, ListView):
     model = Cliente
     template_name = "clientelist.html"
     context_object_name = "clientes"

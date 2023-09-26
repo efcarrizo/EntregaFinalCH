@@ -1,5 +1,6 @@
 from django.urls import path
 from Distribuidora.views import *
+from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     #urls paginas
@@ -47,4 +48,7 @@ urlpatterns = [
     
     #Register user
     path('register/', usercreate, name="UserCreate"),
+    
+    #Logout
+    path('logout/', LogoutView.as_view(template_name = "inicio.html"), name="Logout"),
 ]
