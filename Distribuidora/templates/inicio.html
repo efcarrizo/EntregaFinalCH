@@ -45,12 +45,23 @@
                 </div>
         
                 {% if user.is_authenticated %}
-                <div class="ml-auto">
-                    <a class="dropdown-item text-white">Bienvenido {{user.username}}</a>
-                </div>
-                <div class="ml-auto">
-                    <a class="btn btn-primary" href="{% url 'Logout'%}">Logout</a>
-                </div>
+                    
+                    {% if url %}
+                        <div class="ml-auto">
+                            <a class="dropdown-item text-white"><img src="{{ url }}" height="30px" alt="avatar"> Bienvenido {{user.username}}</a>
+                        </div>
+                        <div class="ml-auto">
+                            <a class="btn btn-primary" href="{% url 'Logout'%}">Logout</a>
+                        </div>
+                    {% else %}
+                        <div class="ml-auto">
+                            <a class="dropdown-item text-white">Bienvenido {{user.username}}</a>
+                        </div>
+                        <div class="ml-auto">
+                            <a class="btn btn-primary" href="{% url 'Logout'%}">Logout</a>
+                        </div>
+                    {% endif %}
+
                 {% else %}
                 <a class="btn btn-primary" href="{% url 'Login'%}">Login</a>
                 {% endif %}
@@ -73,6 +84,10 @@
         
 {% block HerenciaDeContenido %}
     <h1>Inicio</h1>
+    
+    {% if url %}
+        <img src="{{url}}" alt="avatar">
+    {% endif %}
     {{mensaje}}
 {% endblock HerenciaDeContenido %}
             

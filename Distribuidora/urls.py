@@ -51,4 +51,11 @@ urlpatterns = [
     
     #Logout
     path('logout/', LogoutView.as_view(template_name = "inicio.html"), name="Logout"),
+    
+    #UserUpdate
+    path('user-update/', userupdate, name="UserUpdate"),
+    
+    #AddAvatar
+    path('add-avatar/', addAvatar, name="AgregaAvatar")
+
 ]

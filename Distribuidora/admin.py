@@ -12,3 +12,4 @@ class ProductoAdmin(admin.ModelAdmin):
 admin.site.register(Cliente, ClienteAdmin)
 admin.site.register(Producto, ProductoAdmin)
 admin.site.register(Venta)
+admin.site.register(Avatar)

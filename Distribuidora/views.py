@@ -1,13 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import *
 from django.http import HttpResponse
 from .forms import *
+from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView, UpdateView, CreateView
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 from django.contrib.auth  import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 
 def cliente(req, nombre, apellido, email):
     
@@ -28,10 +30,15 @@ def lista_clientes(req):
 #########################################################################################
 
 #Inicio
-
 def inicio(req):
     
-    return render(req, 'inicio.html')
+    try:
+        avatar = Avatar.objects.get(user = req.user.id)
+        return render(req, 'inicio.html', {"url" : avatar.image.url, "mensaje": "Mensaje"})
+    except:
+        return render(req, 'inicio.html')
+    
+    
 
 #clientes
 
@@ -297,3 +304,64 @@ def usercreate(req):
         resultado = render(req, "register.html", {"miFormulario": miFormulario}) #Renderiza la pagina de inicio con el contexto del formulario para mostrar
     
     return resultado
+
+#Editar usuario
+
+def userupdate(req):
+    
+    user = req.user
+    
+    if req.method == 'POST':
+        
+        miFormulario = UserEditForm(req.POST, instance= req.user)
+        
+        if miFormulario.is_valid():
+            
+            data = miFormulario.cleaned_data
+            
+            user.first_name = data["first_name"]
+            user.last_name = data["last_name"]
+            user.email = data["email"]
+            user.set_password(data["password1"])
+            user.save()
+            
+            resultado = render(req, "inicio.html", {"mensaje": "Perfil actualizado con exito"})
+        else:
+            resultado = render(req, "userupdate.html", {"miFormulario": miFormulario}) #Si def clean_password no valida bien tira el error en este campo
+    else:
+        miFormulario = UserEditForm(instance = req.user)
+        
+        resultado = render(req, "userupdate.html", {"miFormulario": miFormulario})
+    
+    return resultado
+
+
+#########################################################################################
+
+
+#Avatar
+@login_required
+def addAvatar(req):
+    if req.method == 'POST':
+        miFormulario = AvatarFormulario(req.POST, req.FILES)
+        
+        if miFormulario.is_valid():
+            user = req.user
+            existing_avatar = Avatar.objects.filter(user=user).first()
+            
+            if existing_avatar:
+                # Si el usuario ya tiene un avatar, lo rempleaza
+                existing_avatar.image = miFormulario.cleaned_data["image"]
+                existing_avatar.save()
+            else:
+                # Si el usuario no tiene un avatar, crea uno nuevo
+                avatar = Avatar(user=user, image=miFormulario.cleaned_data["image"])
+                avatar.save()
+            
+            return render(req, "addavatar.html", {"mensaje": "Avatar modificado con exito!"})
+    else:
+        miFormulario = AvatarFormulario()
+    
+    return render(req, "addavatar.html", {"miFormulario": miFormulario})
+            
+            

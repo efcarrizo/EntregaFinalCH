@@ -1,0 +1,21 @@
+{% extends 'inicio.html' %}
+
+
+{% block HerenciaDeContenido %}
+
+
+{% if get.method %}
+
+{{mensaje}}    
+{% else %}
+<form action="{% url 'AgregaAvatar' %}" enctype="multipart/form-data" method="post">{% csrf_token %}
+
+    {{miFormulario.as_p}}
+
+    <button type="submit">Guardar</button>
+</form>
+{% endif %}
+    
+
+    
+{% endblock HerenciaDeContenido %}

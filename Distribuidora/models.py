@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Cliente(models.Model):
     
@@ -29,6 +30,17 @@ class Venta(models.Model):
     
     def __str__(self):
         return f'Producto: {self.producto} Cliente: {self.cliente} Cantidad: {self.cantidad}'
+    
+class Avatar(models.Model): #Vamos a crear el modelo avatar que tendra 2 campos
+    
+    #Este campo vincula con el usuario
+    user = models.ForeignKey(User, on_delete=models.CASCADE) #Si se elimina el usuario eliminamos los avatars de ese usuario
+    #Este campo es para subir la imagen
+    image = models.ImageField(upload_to='avatares/', blank=True, null=True)
         
+    def __str__(self):
+        return f"{self.user} - {self.image}"
+    
+   
 
     

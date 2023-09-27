@@ -2,6 +2,9 @@
 
 
 {% block HerenciaDeContenido %}
+{% if user_avatar %}
+<img src="{{ user_avatar.image.url }}" alt="Avatar">
+{% endif %}
 
 <ul>
     
