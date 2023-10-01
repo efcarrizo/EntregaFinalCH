@@ -1,6 +1,5 @@
-{% extends 'inicio.html' %}
-
-
+{% extends 'base_layout.html' %}
+{% block title %}Actualizar Usuario{% endblock title %}
 {% block HerenciaDeContenido %}
 
     <form action="{% url 'UserUpdate' %}" method="post">{% csrf_token %}

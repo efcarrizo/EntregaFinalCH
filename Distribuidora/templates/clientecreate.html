@@ -1,6 +1,5 @@
-{% extends 'inicio.html' %}
-
-
+{% extends 'base_layout.html' %}
+{% block title %}Crear cliente{% endblock title %}
 {% block HerenciaDeContenido %}
 
     <form action="{% url 'CreaCliente' %}" method="post">{% csrf_token %}

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from django.http import HttpResponse
 from .forms import *
@@ -10,21 +10,19 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, User
 from django.contrib.auth  import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
 
-def cliente(req, nombre, apellido, email):
-    
-    cliente = Cliente(nombre = nombre, apellido = apellido, email = email)
-    cliente.save()
-    
-    return HttpResponse(f"""
-        <p>Curso: {cliente.nombre} - Apellido: {cliente.apellido} Email: {cliente.email} agregado!</p>
-        """)
 
-def lista_clientes(req):
+
+#404 si no encuentra una pagina
+def error_404(request, exception):
+    return render(request, '404.html', status=404)
+
+def lista_productos(req):
     
-    lista = Cliente.objects.all()
+    lista = Producto.objects.all()
     
-    return render(req, 'lista_clientes.html', {'lista_clientes': lista})
+    return render(req, 'productos.html', {'lista_productos': lista})
 
 
 #########################################################################################
@@ -34,9 +32,9 @@ def inicio(req):
     
     try:
         avatar = Avatar.objects.get(user = req.user.id)
-        return render(req, 'inicio.html', {"url" : avatar.image.url, "mensaje": "Mensaje"})
+        return render(req, 'base_layout.html', {"url" : avatar.image.url, "mensaje": "Bienvenid@ a la tienda digital de Annie's Grow"})
     except:
-        return render(req, 'inicio.html')
+        return render(req, 'base_layout.html')
     
     
 
@@ -47,55 +45,29 @@ def clientes(req):
     return render(req, 'clientes.html')
 
 #Productos
-
+@login_required
 def productos(req):
+    productos = Producto.objects.all()
     
-    return render(req, 'productos.html')
+    return render(req, "leer_productos.html", {"productos":productos})
 
 #Ventas
 
-def ventas(req):
+def lista_compras(req):
     
+    ventas = Compra.objects.all()
     
-    return render(req, 'ventas.html', {"mensaje": "ventas"})
+    return render(req, 'ventas.html', {"ventas": ventas})
 
 #########################################################################################
 
 #Forms method post
 
-#Crear un cliente
-def clientesformularios(req): 
-    if req.method == 'POST': #Si el metodo que se envia es de tipo post entra en este condicional
-        
-        miFormulario = ClienteFormulario(req.POST) #Se obtiene en una variable ese formulario
-        
-        if miFormulario.is_valid(): #Si estan todos los campos llenos entra en este condicional
-            
-            data = miFormulario.cleaned_data  #Recupera todos los datos del formulario en la variable data
-            
-            nombre = data["nombre"] #Se le asignan valores a cada dato recuperado del formulario
-            apellido = data["apellido"]
-            email = data["email"]
-            
-            existing_cliente = Cliente.objects.filter(email=email).first() # Verificar si ya existe un cliente en la base de datos con el mismo email
-            
-            if existing_cliente: #Si el email del cliente existe entra en este condicional
-                return render(req, "inicio.html", {"mensaje": "Ya existe un cliente con este correo electrónico"})
-            else:
-                cliente = Cliente(nombre=nombre, apellido=apellido, email=email) # Si no existe un cliente con el mismo email, crea uno nuevo
-                cliente.save()
-                return render(req, "inicio.html", {"mensaje": "Cliente creado con éxito"})
-        else:
-            return render(req, "inicio.html", {"mensaje": "Formulario inválido"})
-
-    else:
-        miFormulario = ClienteFormulario() #Si no entra por metodo post Muestra el formulario vacio
-        return render(req, "clientes_formulario.html", {"miFormulario": miFormulario}) #Se le pasa el contexto miFormulario para mostrar en clientes_formulario.html
-
-#Cargar un Producto    
+#Cargar un Producto
+@login_required    
 def productosformulario(req):
     if req.method == 'POST':
-        miFormulario = ProductoFormulario(req.POST)
+        miFormulario = ProductoFormulario(req.POST, req.FILES) #Si se suben imagenes hay que poner un req.FILES para poder hacerlo
         
         if miFormulario.is_valid():
             data = miFormulario.cleaned_data
@@ -104,19 +76,20 @@ def productosformulario(req):
             categoria = data["categoria"]
             precio = data["precio"]
             stock = data["stock"]
+            imagen = data["imagen"]
             
             # Verificar si ya existe un producto en la base de datos con el mismo nombre
             existing_producto = Producto.objects.filter(nombre=nombre).first()
             
             if existing_producto:
-                return render(req, "inicio.html", {"mensaje": "Ya existe un producto con este mismo nombre"})
+                return render(req, "base_layout.html", {"mensaje": "Ya existe un producto con este mismo nombre"})
             else:
                 # Si no existe un cliente con el mismo email, crea uno nuevo
-                producto = Producto(nombre=nombre, codigo=codigo, categoria=categoria, precio=precio, stock=stock)
+                producto = Producto(nombre=nombre, codigo=codigo, categoria=categoria, precio=precio, stock=stock, imagen=imagen)
                 producto.save()
-                return render(req, "inicio.html", {"mensaje": "Producto creado con éxito"})
+                return render(req, "base_layout.html", {"mensaje": "Producto creado con éxito"})
         else:
-            return render(req, "inicio.html", {"mensaje": "Formulario inválido"})
+            return render(req, "base_layout.html", {"mensaje": "Formulario inválido"})
 
     else:
         miFormulario = ProductoFormulario()
@@ -133,16 +106,17 @@ def productobusqueda(req):
     
     return render(req, "busqueda_producto.html", {"mensaje" : "hola soy un contexto"})
 
+    
 def producto_buscar(req):
     
    if "producto" in req.GET: #Si se envia un producto verifica que el producto exista
         nombre_producto = req.GET["producto"]
         try:
-            producto = Producto.objects.get(nombre=nombre_producto)
-            return render(req, 'resultado_busqueda_producto.html', {"producto": producto})
+            productos = Producto.objects.filter(nombre__icontains=nombre_producto)
+            return render(req, 'resultado_busqueda_producto.html', {"productos": productos})
         except Producto.DoesNotExist:
             return render(req, 'resultado_busqueda_producto.html', {"mensaje": "No se encuentra el producto"})
-        
+
 
 #Busqueda de clientes
 
@@ -204,9 +178,9 @@ def editar_clientes(req, id):
             cliente.email = data["email"]
             cliente.save()
             
-            return render(req, "inicio.html", {"mensaje": "Cliente modificado"})
+            return render(req, "base_layout.html", {"mensaje": "Cliente modificado"})
         else:
-            return render(req, "inicio.html", {"mensaje": "Formulario inválido"})
+            return render(req, "base_layout.html", {"mensaje": "Formulario inválido"})
 
     else:
         miFormulario = ClienteFormulario(initial={
@@ -215,8 +189,59 @@ def editar_clientes(req, id):
             "email": cliente.email      
         })
         return render(req, "editar_cliente.html", {"miFormulario": miFormulario, "id": cliente.id}) #Muestra el formulario con el cliente
+
+#Leer productos
+def leer_productos(req):
+    productos = Producto.objects.all()
+    
+    return render(req, "leer_productos.html", {"productos":productos})
+
+#Eliminar producto
+def eliminar_producto(request, id):
+    producto = Producto.objects.get(id=id)
+
+    if request.method == 'POST':
+        # Si se envió una solicitud POST, significa que el usuario confirmó la eliminación.
+        producto.delete()
+        return redirect("leer-productos")  # Redirige a la página de destino después de la eliminación
+
+    return render(request, "confirmar_eliminar_producto.html", {"producto": producto})
+
+#Editar productos
+
+def editar_productos(req, id):
+    
+    producto = Producto.objects.get(id=id) #Producto obtiene la id del Modelo Producto
     
     
+    if req.method == 'POST': #Si el formulario viene en metodo post
+        miFormulario = ProductoFormulario(req.POST)
+        
+        if miFormulario.is_valid():
+            data = miFormulario.cleaned_data
+            producto.nombre = data["nombre"]
+            producto.codigo = data["codigo"]
+            producto.categoria = data["categoria"]
+            producto.precio = data["precio"]
+            producto.stock = data["stock"]
+            producto.save()
+            
+            return render(req, "base_layout.html", {"mensaje": "Producto modificado"})
+        else:
+            return render(req, "base_layout.html", {"mensaje": "Formulario inválido"})
+
+    else:
+        miFormulario = ProductoFormulario(initial={
+            "nombre": producto.nombre,
+            "codigo": producto.codigo,
+            "categoria": producto.categoria,
+            "precio": producto.precio,
+            "stock": producto.stock,
+                  
+        })
+        return render(req, "editar_producto.html", {"miFormulario": miFormulario, "id": producto.id}) #Muestra el formulario con los datos actuales del producto
+    
+      
 #CRUD con clases
 
 class ClienteList(LoginRequiredMixin, ListView):
@@ -231,21 +256,64 @@ class ClienteDetail(DetailView):
     
 class ClienteCreate(CreateView):
     model = Cliente
-    context_object_name = "CreacionDOCURSINHO"
+    context_object_name = "CreacionCliente"
     template_name = "clientecreate.html"
     fields = ["nombre", "apellido", "email"]
     success_url = "/distribuidora/"
 
+    def form_valid(self, form):
+            # Verificar si el usuario ya tiene un cliente vinculado
+            if Cliente.objects.filter(user=self.request.user).exists():
+                # Si es así, agregar un error al formulario y devolverlo
+                form.add_error(None, "Este usuario ya tiene un cliente vinculado.")
+                return self.form_invalid(form)
+
+            # Si no, proceder como antes
+            form.instance.user = self.request.user
+            return super().form_valid(form)
+
 class ClienteUpdate(UpdateView):
     model = Cliente
     template_name = "clienteupdate.html"
-    fields = ["__all__"]
+    fields = "__all__"
     success_url = "/distribuidora/"
 
 class ClienteDelete(DeleteView):
     model = Cliente
     template_name = "clientedelete.html"
     success_url = "/distribuidora/"
+
+class CreateCompra(CreateView):
+    model = Compra
+    fields = ['cliente', 'producto', 'cantidad']
+    template_name = "pruebadecompra.html"
+    success_url = "/distribuidora/"
+
+    def form_valid(self, form):
+        # Obtenemos el producto y la cantidad del formulario
+        producto_id = form.cleaned_data['producto'].id
+        producto = get_object_or_404(Producto, id=producto_id)
+        cantidad_compra = form.cleaned_data['cantidad']
+
+        if cantidad_compra <= 0:
+            # Si la cantidad de compra es igual o menor que cero, muestra un mensaje de error
+            form.add_error('cantidad', 'La cantidad debe ser mayor que cero.')
+            return super().form_invalid(form)
+
+        if cantidad_compra > producto.stock:
+            # Si la cantidad de compra es mayor que el stock, muestra un mensaje de error
+            form.add_error('cantidad', 'No hay suficiente stock para esta compra.')
+            return super().form_invalid(form)
+
+        # La cantidad de compra es válida, así que procedemos a guardar la compra
+        response = super().form_valid(form)
+
+        # Actualizamos el stock del producto
+        producto.stock -= cantidad_compra
+        producto.save()
+
+        return response
+
 
 
 #########################################################################################
@@ -268,11 +336,11 @@ def userlogin(req):
             
             if user: #Si el usuario existe entra en este condicional
                 login(req, user) #Se llama al metodo login y se le pasa el user
-                resultado = render(req, "inicio.html", {"mensaje": f"Bienvenido {user}"})
+                resultado = render(req, "base_layout.html", {"mensaje": f"Bienvenido {user}"})
             else: #Si el usuario no existe entra en este 
-                resultado = render(req, "inicio.html", {"mensaje": "Datos incorrectos"})
+                resultado = render(req, "base_layout.html", {"mensaje": "Datos incorrectos"})
         else:
-            resultado = render(req, "inicio.html", {"mensaje":"Formulario invalido"})
+            resultado = render(req, "base_layout.html", {"mensaje":"Formulario invalido"})
     else:
         miFormulario = AuthenticationForm() #Si entra con un metodo get miFormulario obtiene el formulario de registro de usuario
         resultado = render(req, 'login.html', {"miFormulario": miFormulario}) #Renderiza la pagina de inicio con el contexto del formulario para mostrar
@@ -295,9 +363,9 @@ def usercreate(req):
             
             miFormulario.save() #El mismo formulario tiene el metodo save, y lo hace automatico.
             
-            resultado = render(req, "inicio.html", {"mensaje": f"Usuario {username} creado con exito!"})
+            resultado = render(req, "base_layout.html", {"mensaje": f"Usuario {username} creado con exito!"})
         else:
-            resultado = render(req, "inicio.html", {"mensaje":"Formulario invalido"})
+            resultado = render(req, "base_layout.html", {"mensaje":"Formulario invalido"})
                  
     else:
         miFormulario = UserCreationForm() #Si entra con un metodo get miFormulario obtiene el formulario de creacion de usuario vacio
@@ -325,7 +393,7 @@ def userupdate(req):
             user.set_password(data["password1"])
             user.save()
             
-            resultado = render(req, "inicio.html", {"mensaje": "Perfil actualizado con exito"})
+            resultado = render(req, "base_layout.html", {"mensaje": "Perfil actualizado con exito"})
         else:
             resultado = render(req, "userupdate.html", {"miFormulario": miFormulario}) #Si def clean_password no valida bien tira el error en este campo
     else:
@@ -363,5 +431,68 @@ def addAvatar(req):
         miFormulario = AvatarFormulario()
     
     return render(req, "addavatar.html", {"miFormulario": miFormulario})
-            
-            
+
+##################################################################################
+
+#Prueba de compra
+def hacer_compra(request, producto_id):
+    # Obtener el producto que se va a comprar
+    producto = get_object_or_404(Producto, id=producto_id)
+
+    if request.method == 'POST':
+        form = CompraProductoForm(request.POST)
+
+        if form.is_valid():
+            cantidad_compra = form.cleaned_data['cantidad']
+
+            # Verificar si hay suficiente stock para la compra
+            if cantidad_compra > 0 and producto.stock >= cantidad_compra:
+                # Crear una instancia de Compra y guardarla en la base de datos
+                compra = Compra(producto=producto, cliente=request.user.cliente, cantidad=cantidad_compra)
+                compra.save()
+
+                # Actualizar el stock del producto
+                producto.stock -= cantidad_compra
+                producto.save()
+                
+                print(f'Cantidad de compra: {cantidad_compra}')
+                print(f'Stock antes de la compra: {producto.stock}')
+
+                # Redirigir a una página de éxito de compra
+                return redirect('compra_exitosa')
+
+    else:
+        form = CompraProductoForm()
+
+    return render(request, 'hacer_compra.html', {'producto': producto, 'form': form})
+
+def compra_exitosa(req):
+    return render(req, 'compra_exitosa.html')
+
+
+########################################################################################
+
+def cards_productos(req, start=1):
+    cant_por_pagina = 3
+
+    start = int(start)
+
+    if req.GET.get("direction") == 'next':
+        start += 1
+    elif req.GET.get("direction") == 'before':
+        start -= 1
+    if start <= 0:
+        start = 1
+
+    inicio = (start - 1) * cant_por_pagina
+    final = start * cant_por_pagina
+
+    productos = Producto.objects.all()[inicio:final]
+
+    # Verifica si hay más productos disponibles
+    no_more_products = len(productos) == 0
+
+    return render(req, "cards_productos.html", {"productos": productos, "current_page": start, "no_more_products": no_more_products})
+
+
+

@@ -24,6 +24,7 @@ class ProductoFormulario(forms.Form):
     categoria = forms.CharField(required=True)
     precio = forms.DecimalField(required=True)
     stock = forms.IntegerField(required=True)
+    imagen = forms.ImageField(required=False)
     
 class UserEditForm(UserChangeForm): #Creamos la clase UserEditForm que hereda de UserChangeForm para poder personalizar los campos que queremos mostrar en el form de UserUpdate
     
@@ -55,3 +56,10 @@ class AvatarFormulario(forms.ModelForm):
     class Meta:
         model = Avatar
         fields = ('image', ) #Se pone con , para que lo tome como una tupla, sino lo toma como una imagen
+        
+class CompraProductoForm(forms.Form):
+    cantidad = forms.IntegerField(
+        label='Cantidad a comprar',
+        min_value=1,
+        widget=forms.NumberInput(attrs={'class': 'form-control'})
+    )

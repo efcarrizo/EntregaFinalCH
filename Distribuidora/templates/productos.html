@@ -1,8 +1,12 @@
-{% extends 'inicio.html' %}
-
-
+{% extends 'base_layout.html' %}
+{% block title %}Productos{% endblock title %}
 {% block HerenciaDeContenido %}
 <h1>Productos</h1>
+{% for producto in lista_productos %}
+
+<ul>{{producto.imagen}} {{producto.nombre}} {{producto.codigo}} {{producto.stock}} </ul>
+{% endfor %}
+
 {% endblock HerenciaDeContenido %}
 
     

@@ -1,10 +1,7 @@
-{% extends 'inicio.html' %}
-
-
+{% extends 'base_layout.html' %}
+{% block title %}Lista clientes{% endblock title %}
 {% block HerenciaDeContenido %}
-{% if user_avatar %}
-<img src="{{ user_avatar.image.url }}" alt="Avatar">
-{% endif %}
+
 
 <ul>
     

@@ -1,0 +1,23 @@
+{% extends 'base_layout.html' %}
+{% block title %}Realizar compra{% endblock title %}
+{% block HerenciaDeContenido %}
+
+   <h1>Realizar Compra</h1>
+    <p>Producto: {{ producto.nombre }}</p>
+    <p>Precio: ${{ producto.precio }}</p>
+    <p>Stock disponible: {{ producto.stock }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Realizar Compra">
+
+        {% if request.method == 'POST' and not form.is_valid %}
+            <p class="error-message">No hay suficiente stock para la compra.</p>
+        {% endif %}
+    </form>
+    
+    <a href="{% url 'CardsProductos' 0 %}">Volver a la lista de productos</a>
+
+{% endblock HerenciaDeContenido %}
+

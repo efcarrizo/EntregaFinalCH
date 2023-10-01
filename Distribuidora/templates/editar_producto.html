@@ -1,0 +1,12 @@
+{% extends 'base_layout.html' %}
+{% block title %}Editar Cliente{% endblock title %}
+{% block HerenciaDeContenido %}
+
+    <form action="{% url 'EditarProducto' id %}" method="post">{% csrf_token %}
+
+        {{miFormulario.as_p}}
+
+        <button type="submit">Actualizar</button>
+    </form>
+    
+{% endblock HerenciaDeContenido %}

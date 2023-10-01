@@ -1,0 +1,58 @@
+{% extends 'base_layout.html' %}
+{% block title %}Lista clientes{% endblock title %}
+{% block HerenciaDeContenido %}
+
+<section class="lista-productos">
+    {% for producto in productos %}
+        {% if producto.imagen %}
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="{{producto.imagen.url}}" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">{{producto.nombre}}</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="{% url 'hacer_compra' producto.id %}" class="btn btn-primary">Comprar</a>
+            </div>
+        </div>
+        {% else %}
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">{{producto.nombre}} - {{producto.categoria}} </h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="{% url 'hacer_compra' producto.id %}" class="btn btn-primary">Comprar</a>
+            </div>
+        </div>  
+        {% endif %}
+            
+    {% endfor %}
+</section>
+        {% if no_more_products %}
+        <h1>No hay mas productos!</h1>
+        <section class="paginado">
+            <nav aria-label="...">
+                <ul class="pagination">
+        {% else %}
+        <section class="paginado">
+            <nav aria-label="...">
+                <ul class="pagination">
+        {% endif %}
+            {% if no_more_products %}
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'CardsProductos' current_page %}?direction=before">Before</a>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">No hay más productos</span>
+                </li>
+            {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'CardsProductos' current_page %}?direction=before">Before</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'CardsProductos' current_page %}?direction=next">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</section>
+
+{% endblock HerenciaDeContenido %}

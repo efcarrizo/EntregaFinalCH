@@ -1,6 +1,5 @@
-{% extends 'inicio.html' %}
-
-
+{% extends 'base_layout.html' %}
+{% block title %}Registrarse{% endblock title %}
 {% block HerenciaDeContenido %}
 
     <form action="{% url 'UserCreate' %}" method="post">{% csrf_token %}

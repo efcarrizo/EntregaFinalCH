@@ -1,0 +1,12 @@
+{% extends 'base_layout.html' %}
+{% block title %}Crear compra{% endblock title %}
+{% block HerenciaDeContenido %}
+
+    <form action="{% url 'ComprarPruebaClase' %}" method="post">{% csrf_token %}
+
+        {{form.as_p}}
+
+        <button type="submit">Enviar</button>
+    </form>
+    
+{% endblock HerenciaDeContenido %}

@@ -1,0 +1,9 @@
+{% extends 'base_layout.html' %}
+{% block title %}Compra exitosa!{% endblock title %}
+{% block HerenciaDeContenido %}
+
+<h1>TU COMPRA SE REALIZO CON EXITO!</h1>
+<p>Un vendedor se estará comunicando con vos para enviarte el producto!</p>
+<a href="{% url 'CardsProductos' 0 %}">Volver a la lista de productos</a>
+    
+{% endblock HerenciaDeContenido %}

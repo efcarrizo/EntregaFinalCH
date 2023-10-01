@@ -1,6 +1,5 @@
-{% extends 'inicio.html' %}
-
-
+{% extends 'base_layout.html' %}
+{% block title %}Buscar producto{% endblock title %}
 {% block HerenciaDeContenido %}
 
     <form action="{% url 'ProductoBuscar' %}" method="get">

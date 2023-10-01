@@ -8,5 +8,5 @@ def user_avatar(request):
         avatar = Avatar.objects.filter(user=user).first()
 
     return {
-        'user_avatar': avatar
+        'user_avatar': avatar,
     }

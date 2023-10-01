@@ -1,0 +1,18 @@
+<section class="paginado">
+    <nav aria-label="...">
+        <ul class="pagination">
+            {% if no_more_products %}
+                <li class="page-item disabled">
+                    <span class="page-link">No hay más productos</span>
+                </li>
+            {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'CardsProductos' current_page %}?direction=before">Before</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'CardsProductos' current_page %}?direction=next">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</section>

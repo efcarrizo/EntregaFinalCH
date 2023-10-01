@@ -1,0 +1,29 @@
+{% extends 'base_layout.html' %}
+
+{% block title %}Lista de Productos{% endblock title %}
+
+{% block HerenciaDeContenido %}
+    <h1>Lista de Productos</h1>
+    <ul>
+        {% for producto in productos %}
+                {% if producto.imagen %}
+                    <br>
+                    <img src="{{ producto.imagen.url }}" height="100px" alt="{{ producto.nombre }}">
+                    <br> 
+                    {{ producto }} - Stock {{ producto.stock }}
+                    <br>
+                {% else %}
+                    <br>
+                    {{ producto }} - Stock {{ producto.stock }}
+                    <br>
+                {% endif %}
+            <div>
+                <form method="post" action="{% url 'EliminarProducto' producto.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Eliminar Producto</button>
+                </form>
+                <button><a href="{% url 'EditarProducto' producto.id %}">Editar Producto</a></button>
+            </div>
+        {% endfor %}
+    </ul>
+{% endblock HerenciaDeContenido %}

@@ -1,0 +1,22 @@
+{% extends 'base_layout.html' %}
+{% block title %}Comprar productos{% endblock title %}
+{% block HerenciaDeContenido %}
+    <h1>Productos disponibles:</h1>
+    <form method="post">
+        {% csrf_token %}
+        <ul>
+            {% for item in productos_y_formularios %}
+                <li>
+                    {{ item.producto.nombre }} - Stock: {{ item.producto.stock }}
+                    {{ item.form.cantidad }}
+                    <button type="submit">Comprar</button>
+                    <input type="hidden" name="producto_id" value="{{ item.producto.id }}">
+                </li>
+            {% endfor %}
+        </ul>
+    </form>
+    
+    
+    
+{% endblock HerenciaDeContenido %}
+    

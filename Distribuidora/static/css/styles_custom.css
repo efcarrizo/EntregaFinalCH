@@ -1,0 +1,19 @@
+.lista-productos{
+
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    row-gap: 20px;
+    justify-items: center;
+    align-items: center;
+    margin: 30px;
+
+}
+
+.paginado{
+
+    display: grid;
+    row-gap: 20px;
+    justify-items: center;
+    align-items: center;
+    margin: 30px;
+}

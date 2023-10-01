@@ -1,16 +1,43 @@
-{% extends 'inicio.html' %}
-
+{% extends 'base_layout.html' %}
+{% block title %}Resultado busqueda productos{% endblock title %}
 {% block HerenciaDeContenido %}
 
 <h1>Resultado de búsqueda de producto</h1>
 <!-- Si el producto es encontrado
     devuelve el nombre y el stock,
     de lo contrario el mensaje del contexto -->
-{% if producto %}
-    <h2>Producto encontrado:</h2>
-    <p>Nombre: {{ producto.nombre }}</p>
-    <p>Stock: {{ producto.stock }}</p>
+{% if productos %}  
+<!-- productos es el contexto de producto_buscar(view) -->
+
+<ul>
+    {% for producto in productos %}
+
+    <!-- producto recorre cada uno de los items dentro de productos -->
+    
+        <li>
+            
+            {% if producto.imagen %}
+
+            <p><img src="{{ producto.imagen.url }}" height="100px" alt="{{ producto.nombre }}"></p>
+            <p>Nombre: {{producto.nombre}}</p>
+            <p>Stock: {{producto.stock}}</p>
+            <p>Categoría : {{producto.categoria}} </p>
+
+            {% else %}
+
+            <p>Nombre: {{producto.nombre}}</p>
+            <p>Stock: {{producto.stock}}</p>
+            <p>Categoría : {{producto.categoria}} </p>
+                
+            {% endif %}
+
+        </li>
+        
+    {% endfor %}
+</ul>
     <button><a href="{% url 'ProductoBusqueda' %}">Volver a la busqueda</a></button>
+
+    
 {% else %}
     <p>{{ mensaje }}</p>
     <button><a href="{% url 'ProductoBusqueda' %}">Volver a la busqueda</a></button>

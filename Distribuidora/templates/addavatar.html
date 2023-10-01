@@ -1,19 +1,15 @@
-{% extends 'inicio.html' %}
-
-
+{% extends 'base_layout.html' %}
+{% block title %}Agregar Avatar{% endblock title %}
 {% block HerenciaDeContenido %}
 
-
-{% if get.method %}
-
-{{mensaje}}    
+{% if request.method == 'POST' %}
+    {{ mensaje }}
 {% else %}
-<form action="{% url 'AgregaAvatar' %}" enctype="multipart/form-data" method="post">{% csrf_token %}
-
-    {{miFormulario.as_p}}
-
-    <button type="submit">Guardar</button>
-</form>
+    <form action="{% url 'AgregaAvatar' %}" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        {{ miFormulario.as_p }}
+        <button type="submit">Guardar</button>
+    </form>
 {% endif %}
     
 

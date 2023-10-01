@@ -1,0 +1,13 @@
+{% extends 'base_layout.html' %}
+
+{% block title %}Confirmar Eliminación de Producto{% endblock title %}
+
+{% block content %}
+    <h1>¿Seguro que deseas eliminar este producto?</h1>
+    <p>{{ producto }}</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirmar</button>
+        <a href="{% url 'LeerProductos' %}">Cancelar</a>  {# Agrega una opción para cancelar #}
+    </form>
+{% endblock content %}

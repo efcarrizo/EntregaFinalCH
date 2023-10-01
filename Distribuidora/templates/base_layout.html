@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% load static %}
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>{% block title %}Grow street{% endblock title %}</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" type="text/css" />
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+        <link href="{% static 'css/styles_custom.css' %}" rel="stylesheet" />
+    </head>
+    <body>
+        <!-- Navigation-->
+        <nav class="navbar navbar-dark bg-dark">
+            <div class="container d-flex justify-content-between">
+                <a class="navbar-brand" href="{% url 'Inicio' %}">Inicio</a>
+
+                {% if user.is_authenticated %}
+                    <a class="navbar-brand" href="{% url 'Ventas' %}">Ventas</a>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Productos
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'Productos' %}">Producto</a></li>
+                            <li><a class="dropdown-item" href="{% url 'ProductosFormulario' %}">Ingresar Producto</a></li>
+                            <li><a class="dropdown-item" href="{% url 'ProductoBusqueda' %}">Buscar Producto</a></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Clientes
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'ListaClientes' %}">Clientes</a></li>
+                            <li><a class="dropdown-item" href="{% url 'CreaCliente' %}">Ingresar cliente</a></li>
+                            <li><a class="dropdown-item" href="{% url 'ClienteBusqueda' %}">Buscar Cliente</a></li>
+                        </ul>
+                    </div>
+                    {% if user_avatar.image.url %}
+                        <div class="ml-auto">
+                            <a class="btn btn-primary" href="{% url 'Logout'%}">Logout</a>
+                        </div>
+                        <div class="ml-auto">
+                            <a class="dropdown-item text-white" href="{% url 'UserUpdate' %}"><img src="{{ user_avatar.image.url }}" height="30px" alt="avatar"> Bienvenido {{user.username}}</a>
+                        </div>
+                    {% else %}
+                        <div class="ml-auto">
+                            <a class="dropdown-item text-white">Bienvenido {{user.username}}</a>
+                        </div>
+                        <div class="ml-auto">
+                            <a class="btn btn-primary" href="{% url 'Logout'%}">Logout</a>
+                        </div>
+                    {% endif %}
+                {% else %}
+                <div class="d-flex">
+                    <a class="btn btn-primary" href="{% url 'Login' %}">Login</a>
+                    <a class="btn btn-secondary ml-2" href="{% url 'UserCreate' %}">Registrarse</a>
+                </div>
+                {% endif %}
+            </div>
+        </nav>
+        
+        <!-- Masthead-->
+        <header class="masthead">
+            <div class="container position-relative">
+                <div class="row justify-content-center">
+                    <div class="col-xl-6">
+                        <div class="text-center text-white">
+                            <!-- Page heading-->
+                            {% comment %} <h1 class="mb-5">Bienvenidos a Annie's Grow</h1> {% endcomment %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+{% block HerenciaDeContenido %}
+  <h1>{{mensaje}}</h1>
+  <p>Para poder visualizar el listado de productos o ser parte de nuestros clientes debes estar loguead@</p>
+  <p>Si no estas registrado puedes registrarte haciendo click <a href="{% url 'UserCreate' %}">aqui</a></p>
+{% endblock HerenciaDeContenido %}
+        <!-- Footer-->
+        <footer class="footer bg-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 h-100 text-center text-lg-start my-auto">
+                        <ul class="list-inline mb-2">
+                            <li class="list-inline-item"><a href="#!">Sobre nosotros</a></li>
+                            <li class="list-inline-item">⋅</li>
+                            <li class="list-inline-item"><a href="#!">Contact</a></li>
+                        </ul>
+                        <p class="text-muted small mb-4 mb-lg-0">&copy; Annie's Grow 2023. Todos los derechos reservados</p>
+                    </div>
+                    <div class="col-lg-6 h-100 text-center text-lg-end my-auto">
+                        <ul class="list-inline mb-0">
+                            <li class="list-inline-item me-4">
+                                <a href="https://www.twitch.tv/frostytwice"><i class="bi-twitch fs-3"></i></a>
+                            </li>
+                            <li class="list-inline-item me-4">
+                                <a href="https://twitter.com/FrostyTwice"><i class="bi-twitter fs-3"></i></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="https://www.instagram.com/frostytwice/"><i class="bi-instagram fs-3"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+        <!-- * *                               SB Forms JS                               * *-->
+        <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
+        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+        <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+    </body>
+</html>
