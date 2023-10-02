@@ -9,14 +9,11 @@ from django.views.generic.edit import DeleteView, UpdateView, CreateView
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 from django.contrib.auth  import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
 
-
-
-#404 si no encuentra una pagina
-def error_404(request, exception):
-    return render(request, '404.html', status=404)
+def is_superuser(user):
+    return user.is_superuser
 
 def lista_productos(req):
     
@@ -493,6 +490,15 @@ def cards_productos(req, start=1):
     no_more_products = len(productos) == 0
 
     return render(req, "cards_productos.html", {"productos": productos, "current_page": start, "no_more_products": no_more_products})
+
+#Ver Compras
+@login_required
+@user_passes_test(is_superuser)
+def ver_compras(req):
+    
+    compras =  Compra.objects.all()
+    
+    return render(req, 'ver_compras.html' , {"compras": compras})
 
 
 

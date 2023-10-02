@@ -23,8 +23,13 @@
             <div class="container d-flex justify-content-between">
                 <a class="navbar-brand" href="{% url 'Inicio' %}">Inicio</a>
 
-                {% if user.is_authenticated %}
-                    <a class="navbar-brand" href="{% url 'Ventas' %}">Ventas</a>
+                    
+                    {% if user.is_superuser %}
+                    <a class="navbar-brand" href="{% url 'Compras' %}">Ventas</a>
+                    {% endif %}
+                        
+                    
+                    {% if user.is_authenticated %}
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Productos

@@ -5,29 +5,29 @@ from . import views
 
 urlpatterns = [
     #urls paginas
-    path('', inicio, name="Inicio"), #CHECK
-    path('productos/', productos, name="Productos"), #CHECK 
-    path('ventas/', lista_compras, name="Ventas" ), #CHECK
+    path('', inicio, name="Inicio"), 
+    path('productos/', productos, name="Productos"),  
+    path('ventas/', lista_compras, name="Ventas" ), 
     
     #Form Post
     
     #Formulario para agregar productos.
-    path('productos-formulario/', productosformulario, name="ProductosFormulario"), #CHECK
+    path('productos-formulario/', productosformulario, name="ProductosFormulario"), 
     
     #Form Get
     
     #Busqueda de producto, pagina de form y pagina de resultados.
-    path('producto-busqueda/', productobusqueda, name="ProductoBusqueda"), #CHECK
-    path('producto-buscar/', producto_buscar, name="ProductoBuscar"), #CHECK
+    path('producto-busqueda/', productobusqueda, name="ProductoBusqueda"), 
+    path('producto-buscar/', producto_buscar, name="ProductoBuscar"), 
     
     #Busqueda de Clientes, pagina de forms y pagina de resultados.
-    path('cliente-busqueda/', clientebusqueda, name="ClienteBusqueda"), #CHECK
-    path('cliente-buscar/', cliente_buscar, name="ClienteBuscar"), #CHECK
+    path('cliente-busqueda/', clientebusqueda, name="ClienteBusqueda"), 
+    path('cliente-buscar/', cliente_buscar, name="ClienteBuscar"), 
     
     #CRUD
     
     #Leer clientes
-    path('clientes/', leer_clientes, name="ListaClientes"), #CHECK
+    path('clientes/', leer_clientes, name="ListaClientes"), 
     #Eliminar clientes
     path('eliminar-cliente/<int:id>', eliminar_clientes, name="EliminarCliente"),
     #Actualizar Clientes
@@ -64,6 +64,8 @@ urlpatterns = [
     #AddAvatar
     path('add-avatar/', addAvatar, name="AgregaAvatar"),
     
+    #Compras
+    path('compras/', ver_compras, name="Compras"),
     
     
     
@@ -73,4 +75,6 @@ urlpatterns = [
     #Comprar producto prueba
     path('comprar/<int:producto_id>/', views.hacer_compra, name='hacer_compra'),
     path('compra-exitosa/', compra_exitosa, name="compra_exitosa"),
+    
+    
 ]

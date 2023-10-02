@@ -1,0 +1,15 @@
+{% extends 'base_layout.html' %}
+{% block title %}Formulario Productos{% endblock title %}
+{% block HerenciaDeContenido %}
+
+
+{% for compra in compras %}
+
+ <li>
+    {{compra.cliente}} - {{compra.producto}} - {{compra.cantidad}}
+ </li>
+    
+{% endfor %}
+    
+    
+{% endblock HerenciaDeContenido %}
