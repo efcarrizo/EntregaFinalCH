@@ -80,10 +80,10 @@
                         </div>
                     {% else %}
                         <div class="ml-auto">
-                            <a class="dropdown-item text-white">Bienvenido {{user.username}}</a>
+                            <a class="btn btn-primary" href="{% url 'Logout'%}">Logout</a>
                         </div>
                         <div class="ml-auto">
-                            <a class="btn btn-primary" href="{% url 'Logout'%}">Logout</a>
+                            <a class="dropdown-item text-white" href="{% url 'UserUpdate' %}">Bienvenido {{user.username}}</a>
                         </div>
                     {% endif %}
                 {% else %}
@@ -114,6 +114,7 @@
   <p>Para poder visualizar el listado de productos o ser parte de nuestros clientes debes estar loguead@</p>
   <p>Si no estas registrado puedes registrarte haciendo click <a href="{% url 'UserCreate' %}">aqui</a></p>
 {% endblock HerenciaDeContenido %}
+
         <!-- Footer-->
         <footer class="footer bg-light">
             <div class="container">

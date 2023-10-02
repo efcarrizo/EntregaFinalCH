@@ -9,7 +9,7 @@ class Cliente(models.Model):
     email = models.EmailField()
     
     def __str__(self):
-        return f'{self.apellido} {self.nombre}'
+        return f'Usuario: {self.user} ({self.apellido} {self.nombre})'
     
 class Producto(models.Model):
     
