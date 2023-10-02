@@ -76,5 +76,8 @@ urlpatterns = [
     path('comprar/<int:producto_id>/', views.hacer_compra, name='hacer_compra'),
     path('compra-exitosa/', compra_exitosa, name="compra_exitosa"),
     
+    #About me 
+    path('aboutme/', aboutme, name="Aboutme")
+    
     
 ]

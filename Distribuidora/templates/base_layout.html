@@ -30,11 +30,13 @@
                         
                     
                     {% if user.is_authenticated %}
+                    
+                    {% if user.is_superuser %}
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Productos
-                        </button>
-                        <ul class="dropdown-menu">
+                            </button>
+                            <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'Productos' %}">Producto</a></li>
                             <li><a class="dropdown-item" href="{% url 'ProductosFormulario' %}">Ingresar Producto</a></li>
                             <li><a class="dropdown-item" href="{% url 'ProductoBusqueda' %}">Buscar Producto</a></li>
@@ -49,7 +51,26 @@
                             <li><a class="dropdown-item" href="{% url 'CreaCliente' %}">Ingresar cliente</a></li>
                             <li><a class="dropdown-item" href="{% url 'ClienteBusqueda' %}">Buscar Cliente</a></li>
                         </ul>
+                    </div>    
+                    {% else %}
+                    <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Productos
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'CardsProductos' 0 %}">Producto</a></li>
+                            <li><a class="dropdown-item" href="{% url 'ProductoBusqueda' %}">Buscar Producto</a></li>
+                        </ul>
                     </div>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Clientes
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'CreaCliente' %}">Generar cliente</a></li>
+                        </ul>
+                    </div>
+                    {% endif %}
                     {% if user_avatar.image.url %}
                         <div class="ml-auto">
                             <a class="btn btn-primary" href="{% url 'Logout'%}">Logout</a>
@@ -99,9 +120,7 @@
                 <div class="row">
                     <div class="col-lg-6 h-100 text-center text-lg-start my-auto">
                         <ul class="list-inline mb-2">
-                            <li class="list-inline-item"><a href="#!">Sobre nosotros</a></li>
-                            <li class="list-inline-item">⋅</li>
-                            <li class="list-inline-item"><a href="#!">Contact</a></li>
+                            <li class="list-inline-item"><a href="{% url 'Aboutme' %}">Sobre mi</a></li>
                         </ul>
                         <p class="text-muted small mb-4 mb-lg-0">&copy; Annie's Grow 2023. Todos los derechos reservados</p>
                     </div>

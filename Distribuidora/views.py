@@ -500,5 +500,9 @@ def ver_compras(req):
     
     return render(req, 'ver_compras.html' , {"compras": compras})
 
+def aboutme(req):
+    
+    return render(req, 'aboutme.html')
+
 
 
